@@ -2,6 +2,7 @@ package app.outlay.view.fragment;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
@@ -30,6 +31,7 @@ import app.outlay.view.autocomplete.CategoryAutoCompleteAdapter;
 import app.outlay.view.dialog.DatePickerFragment;
 import app.outlay.view.fragment.base.BaseMvpFragment;
 import app.outlay.view.helper.TextWatcherAdapter;
+
 import com.rengwuxian.materialedittext.MaterialAutoCompleteTextView;
 
 import java.math.BigDecimal;
@@ -78,6 +80,7 @@ public class ExpensesDetailsFragment extends BaseMvpFragment<ExpenseDetailsView,
     private Category selectedCategory;
     private Date defaultDate;
 
+    @NonNull
     @Override
     public ExpenseDetailsPresenter createPresenter() {
         return presenter;
@@ -232,9 +235,8 @@ public class ExpensesDetailsFragment extends BaseMvpFragment<ExpenseDetailsView,
         if (selectedCategory != null) {
             expense.setCategory(selectedCategory);
         }
-        if (!TextUtils.isEmpty(amount.getText().toString())) {
-            expense.setAmount(new BigDecimal(amount.getText().toString()));
-        }
+        String amountStr = amount.getText().toString().replaceAll(",", ".");
+        expense.setAmount(new BigDecimal(amountStr));
         expense.setNote(note.getText().toString());
         return expense;
     }
@@ -253,11 +255,21 @@ public class ExpensesDetailsFragment extends BaseMvpFragment<ExpenseDetailsView,
             categoryTitle.setError(getString(app.outlay.R.string.error_category_name_invalid));
             categoryTitle.requestFocus();
             result = false;
-        } else if (TextUtils.isEmpty(amount.getText())) {
+        }
+
+        if (TextUtils.isEmpty(amount.getText())) {
             //TODO validate number
             amountInputLayout.setError(getString(app.outlay.R.string.error_amount_invalid));
             amountInputLayout.requestFocus();
             result = false;
+        } else {
+            String amountStr = amount.getText().toString().replaceAll(",", ".");
+            BigDecimal number = new BigDecimal(amountStr);
+            if (number.compareTo(BigDecimal.ZERO) <= 0) {
+                amountInputLayout.setError(getString(app.outlay.R.string.error_amount_invalid));
+                amountInputLayout.requestFocus();
+                result = false;
+            }
         }
 
         return result;
