@@ -12,4 +12,5 @@ android:
 before_script: cd outlay
 script:
 - ./gradlew assembleDebug
+- ./gradlew connectedAndroidTest
   
