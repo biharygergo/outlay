@@ -122,6 +122,19 @@ public class LoginActivityInstrumentationTest {
         onView(withId(R.id.signInForm)).check(matches(isDisplayed()));
     }
 
+    @Test
+    public void validateSignOutAsGuest() {
+        onView(withId(R.id.skipButton)).perform(click());
+        try {
+            Thread.sleep(6000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        onView(withId(R.id.drawerIcon)).perform(click());
+        onView(withText("Sign Out")).perform(click());
+        onView(withId(R.id.loginForm)).check(matches(isDisplayed()));
+    }
+
 
 
 }
