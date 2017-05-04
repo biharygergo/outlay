@@ -7,6 +7,8 @@ import android.support.test.rule.ActivityTestRule;
 import android.view.KeyEvent;
 import android.widget.TextView;
 
+import junit.framework.AssertionFailedError;
+
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -15,7 +17,10 @@ import org.junit.Test;
 import app.outlay.R;
 import app.outlay.view.activity.LoginActivity;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
+import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.pressKey;
 import static android.support.test.espresso.action.ViewActions.typeText;
@@ -47,6 +52,38 @@ public class MainActivityInstrumentationTest {
         }
         catch (NoMatchingViewException e) {
             // already logged in
+        }
+    }
+
+    @Before
+    public void deleteCategories() {
+        try {
+            onView(withId(R.id.addCategory)).check(matches(isDisplayed()));
+        }
+        catch (AssertionFailedError e) {
+            onView(withId(R.id.drawerIcon)).perform(click());
+            onView(withText(R.string.menu_item_categories)).perform(click());
+            try {
+                while(true) {
+                    onView(withId(R.id.categoriesGrid)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+                    openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+                    onView(withText(R.string.label_delete)).perform(click());
+                    try {
+                        Thread.sleep(200);
+                    } catch (InterruptedException ie) {
+                        ie.printStackTrace();
+                    }
+                }
+            }
+            catch (Exception nomore) {
+                // no more categories
+            }
+            pressBack();
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e1) {
+                e1.printStackTrace();
+            }
         }
     }
 
@@ -89,6 +126,23 @@ public class MainActivityInstrumentationTest {
             onView(withId(R.id.amountEditable)).check(matches(withText(String.valueOf(i))));
             onView(withId(R.id.btnClear)).perform(click());
         }
+    }
+
+    @Test
+    public void validateAddAndDeleteCategory() {
+        onView(withId(R.id.addCategory)).perform(click());
+        onView(withId(R.id.fab)).perform(click());
+        onView(withId(R.id.iconsGrid)).perform(RecyclerViewActions.actionOnItemAtPosition(2, click()));
+        onView(withId(R.id.categoryName)).perform(typeText("category"));
+        onView(withId(R.id.action_save)).perform(click());
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        onView(withId(R.id.categoriesGrid)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+        onView(withText(R.string.label_delete)).perform(click());
     }
 
 
