@@ -8,7 +8,7 @@ import android.text.TextUtils;
 public class SimpleNumpadValidator implements NumpadValidator {
     @Override
     public boolean valid(String value) {
-        if (TextUtils.isEmpty(value) || value.length() > 8 || Double.parseDouble(value) == 0.0) {
+        if (TextUtils.isEmpty(value) || value.length() > 8 || value.equals("00")) {
             return false;
         }
         try {

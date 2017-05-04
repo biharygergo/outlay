@@ -136,14 +136,15 @@ public class MainFragment extends BaseMvpFragment<EnterExpenseView, EnterExpense
         }, validator);
         adapter.setOnCategoryClickListener(category -> {
             if (validator.valid(amountText.getText().toString())) {
-
-                Expense e = new Expense();
-                e.setCategory(category);
-                e.setAmount(new BigDecimal(amountText.getText().toString()));
-                e.setReportedWhen(selectedDate);
-                analytics().trackExpenseCreated(e);
-                presenter.createExpense(e);
-                cleanAmountInput();
+                if (Double.valueOf(amountText.getText().toString()) != 0.0 ){
+                    Expense e = new Expense();
+                    e.setCategory(category);
+                    e.setAmount(new BigDecimal(amountText.getText().toString()));
+                    e.setReportedWhen(selectedDate);
+                    analytics().trackExpenseCreated(e);
+                    presenter.createExpense(e);
+                    cleanAmountInput();
+                }
             } else {
                 validator.onInvalidInput(amountText.getText().toString());
             }

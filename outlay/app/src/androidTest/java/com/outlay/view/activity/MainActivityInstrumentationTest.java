@@ -162,15 +162,20 @@ public class MainActivityInstrumentationTest {
             e.printStackTrace();
         }
         pressBack();
-        onView(withId(R.id.btn0)).perform(click());
-        onView(withId(R.id.categoriesGrid)).perform(RecyclerViewActions.actionOnItemAtPosition(1, click()));
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        onView(withId(R.id.btn0)).perform(click());
+        onView(withId(R.id.categoriesGrid)).perform(RecyclerViewActions.actionOnItemAtPosition(1, click()));
+        //try {
+        //    Thread.sleep(2000);
+        //} catch (InterruptedException e) {
+        //    e.printStackTrace();
+        //}
 
-        onView(withText(R.string.label_undo)).check(doesNotExist());
+        //onView(withText(R.string.label_undo)).check(doesNotExist());
     }
 
     @Test
