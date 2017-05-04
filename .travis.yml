@@ -9,6 +9,7 @@ android:
     - android-25
     - extra-android-m2repository
     - extra-google-m2repository
+    - extra-google-google_play_services 
 before_script: cd outlay
 script:
 - ./gradlew assembleDebug
