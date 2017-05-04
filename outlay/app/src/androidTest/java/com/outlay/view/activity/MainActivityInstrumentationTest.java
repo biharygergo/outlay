@@ -2,6 +2,7 @@ package com.outlay.view.activity;
 
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.NoMatchingViewException;
+import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.view.KeyEvent;
 import android.widget.TextView;
@@ -78,6 +79,17 @@ public class MainActivityInstrumentationTest {
         checkNavigationAndBack("Categories");
     }
 
+    @Test
+    public void validateEachNumpadButton() {
+        int buttons[] = {R.id.btn0, R.id.btn1, R.id.btn2, R.id.btn3, R.id.btn4, R.id.btn5,
+                R.id.btn6, R.id.btn7, R.id.btn8, R.id.btn9};
+
+        for (int i = 0; i < 10; i++) {
+            onView(withId(buttons[i])).perform(click());
+            onView(withId(R.id.amountEditable)).check(matches(withText(String.valueOf(i))));
+            onView(withId(R.id.btnClear)).perform(click());
+        }
+    }
 
 
 }
