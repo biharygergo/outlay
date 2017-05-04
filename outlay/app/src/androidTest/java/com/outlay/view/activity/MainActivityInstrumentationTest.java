@@ -161,7 +161,15 @@ public class MainActivityInstrumentationTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        pressBack();
+        Espresso.pressBack();
+        try {
+            onView(allOf(instanceOf(TextView.class), withParent(withId(R.id.toolbar))))
+                    .check(matches(withText("Categories")));
+            Espresso.pressBack();
+        }
+        catch (Exception e) {
+            // no action
+        }
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
@@ -169,13 +177,13 @@ public class MainActivityInstrumentationTest {
         }
         onView(withId(R.id.btn0)).perform(click());
         onView(withId(R.id.categoriesGrid)).perform(RecyclerViewActions.actionOnItemAtPosition(1, click()));
-        //try {
-        //    Thread.sleep(2000);
-        //} catch (InterruptedException e) {
-        //    e.printStackTrace();
-        //}
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
-        //onView(withText(R.string.label_undo)).check(doesNotExist());
+        onView(withText(R.string.label_undo)).check(doesNotExist());
     }
 
     @Test
