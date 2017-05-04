@@ -19,7 +19,7 @@ import javax.inject.Inject;
  * Created by bmelnychuk on 10/26/16.
  */
 
-public class LoginViewPresenter extends MvpBasePresenter<LoginView> {
+public class  LoginViewPresenter extends MvpBasePresenter<LoginView> {
     private UserSignInUseCase userSignInUseCase;
     private UserSignUpUseCase userSignUpUseCase;
     private ResetPasswordUseCase resetPasswordUseCase;

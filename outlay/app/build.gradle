@@ -23,12 +23,15 @@ android {
     compileSdkVersion cfg.compileVersion
     buildToolsVersion cfg.buildToolsVersion
 
+    testBuildType "debug"
+
     defaultConfig {
         applicationId cfg.package
         minSdkVersion cfg.minSdk
         targetSdkVersion cfg.targetSdk
         versionCode cfg.version_code
         versionName cfg.version_name
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
     def propsFile = rootProject.file('release.properties')
@@ -40,10 +43,10 @@ android {
     signingConfigs {
         release {
             if (propsFile.exists()) {
-                storeFile file(props['RELEASE_STORE_FILE'])
-                storePassword props['RELEASE_STORE_PASSWORD']
-                keyAlias props['RELEASE_KEY_ALIAS']
-                keyPassword props['RELEASE_KEY_PASSWORD']
+                storeFile file(props['storefile'])
+                storePassword props['storepasswd']
+                keyAlias props['alias']
+                keyPassword props['password']
             }
         }
     }
@@ -51,6 +54,7 @@ android {
     buildTypes {
         debug {
             buildConfigField "boolean", "USE_ANALYTICS", "false"
+            testCoverageEnabled = true
         }
         staging {
             buildConfigField "boolean", "USE_ANALYTICS", "false"
@@ -125,6 +129,24 @@ dependencies {
     compile "com.google.firebase:firebase-database:${libs.firebase}"
     releaseCompile "com.google.firebase:firebase-crash:${libs.firebase}"
     stagingCompile "com.google.firebase:firebase-crash:${libs.firebase}"
+
+    //Tests
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.1') {
+        // Necessary if your app targets Marshmallow (since Espresso
+        // hasn't moved to Marshmallow yet)
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+    androidTestCompile ('com.android.support.test.espresso:espresso-contrib:2.2'){
+        exclude group: 'com.android.support', module: 'appcompat-v7'
+        exclude group: 'com.android.support', module: 'support-v4'
+        exclude group: 'com.android.support', module: 'support-annotations'
+        exclude module: 'recyclerview-v7'
+    }
+    androidTestCompile('com.android.support.test:runner:0.3') {
+        // Necessary if your app targets Marshmallow (since the test runner
+        // hasn't moved to Marshmallow yet)
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
 }
 
 apply plugin: 'com.google.gms.google-services'
