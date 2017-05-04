@@ -52,7 +52,7 @@ public class LoginActivityInstrumentationTest {
             // logged out
         }
         try {
-            Thread.sleep(1000);
+            Thread.sleep(16000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -137,7 +137,7 @@ public class LoginActivityInstrumentationTest {
         onView(withId(R.id.signInPassword)).perform(click(), typeText("test123"), pressKey(KeyEvent.KEYCODE_ENTER));
         onView(withId(R.id.signInButton)).perform(click());
         try {
-            Thread.sleep(7000);
+            Thread.sleep(16000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -150,7 +150,7 @@ public class LoginActivityInstrumentationTest {
     public void validateSignOutAsGuest() {
         onView(withId(R.id.skipButton)).perform(click());
         try {
-            Thread.sleep(6000);
+            Thread.sleep(16000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

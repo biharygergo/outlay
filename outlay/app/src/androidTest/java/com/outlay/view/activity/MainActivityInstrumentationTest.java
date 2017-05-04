@@ -49,7 +49,7 @@ public class MainActivityInstrumentationTest {
         try {
             onView(withId(R.id.skipButton)).perform(click());
             try {
-                Thread.sleep(6000);
+                Thread.sleep(16000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
