@@ -2,6 +2,7 @@ package com.outlay.view.activity;
 
 import android.os.SystemClock;
 import android.support.annotation.IdRes;
+import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
 import android.view.KeyEvent;
@@ -10,6 +11,8 @@ import android.widget.TextView;
 
 import app.outlay.R;
 import app.outlay.view.activity.LoginActivity;
+
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -33,6 +36,27 @@ public class LoginActivityInstrumentationTest {
     @Rule
     public ActivityTestRule<LoginActivity> activityTestRule =
             new ActivityTestRule<>(LoginActivity.class);
+
+    @Before
+    public void signOutIfNeeded() {
+        try {
+            onView(withId(R.id.drawerIcon)).perform(click());
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            onView(withText("Sign Out")).perform(click());
+        }
+        catch (NoMatchingViewException e) {
+            // logged out
+        }
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
     // Looks for an EditText with id = "R.id.signInEmail"
     // Types the text "test@email.com" into the EditText
