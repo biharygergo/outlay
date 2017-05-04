@@ -7,6 +7,7 @@ import android.support.test.rule.ActivityTestRule;
 import android.view.KeyEvent;
 import android.widget.TextView;
 
+import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
 
 import org.junit.Before;
@@ -22,9 +23,12 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.longClick;
 import static android.support.test.espresso.action.ViewActions.pressKey;
 import static android.support.test.espresso.action.ViewActions.typeText;
+import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -143,6 +147,51 @@ public class MainActivityInstrumentationTest {
         onView(withId(R.id.categoriesGrid)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
         openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
         onView(withText(R.string.label_delete)).perform(click());
+    }
+
+    @Test
+    public void validateAddZeroAmountToCategory(){
+        onView(withId(R.id.addCategory)).perform(click());
+        onView(withId(R.id.fab)).perform(click());
+        onView(withId(R.id.iconsGrid)).perform(RecyclerViewActions.actionOnItemAtPosition(2, click()));
+        onView(withId(R.id.categoryName)).perform(typeText("category"));
+        onView(withId(R.id.action_save)).perform(click());
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        pressBack();
+        onView(withId(R.id.btn0)).perform(click());
+        onView(withId(R.id.categoriesGrid)).perform(RecyclerViewActions.actionOnItemAtPosition(1, click()));
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        onView(withText(R.string.label_undo)).check(doesNotExist());
+    }
+
+    @Test
+    public void validateAmountFormat() {
+
+        onView(withId(R.id.btn2)).perform(click());
+        for (int i = 0; i < 5; i++){
+            onView(withId(R.id.btnDecimal)).perform(click());
+        }
+        onView(withId(R.id.amountEditable)).check(matches(withText("2.")));
+        onView(withId(R.id.btnClear)).perform(longClick());
+
+        onView(withId(R.id.btnDecimal)).perform(click());
+        onView(withId(R.id.amountEditable)).check(matches(withText("")));
+
+        onView(withId(R.id.btn2)).perform(click());
+        onView(withId(R.id.btnDecimal)).perform(click());
+        onView(withId(R.id.btn3)).perform(click());
+        onView(withId(R.id.btnDecimal)).perform(click());
+        onView(withId(R.id.amountEditable)).check(matches(withText("2.3")));
+
     }
 
 
