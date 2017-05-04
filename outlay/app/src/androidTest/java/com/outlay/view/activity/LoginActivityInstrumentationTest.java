@@ -107,6 +107,21 @@ public class LoginActivityInstrumentationTest {
         }
     }
 
+    @Test
+    public void validateSignOutAsTestUser() {
+        onView(withId(R.id.signInEmail)).perform(typeText("test@email.com"));
+        onView(withId(R.id.signInPassword)).perform(click(), typeText("test123"), pressKey(KeyEvent.KEYCODE_ENTER));
+        onView(withId(R.id.signInButton)).perform(click());
+        try {
+            Thread.sleep(7000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        onView(withId(R.id.drawerIcon)).perform(click());
+        onView(withText("Sign Out")).perform(click());
+        onView(withId(R.id.signInForm)).check(matches(isDisplayed()));
+    }
+
 
 
 }
